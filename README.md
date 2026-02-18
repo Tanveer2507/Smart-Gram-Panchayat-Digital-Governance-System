@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Smart Gram Panchayat Digital Governance System (SGPDGS)
 
 A comprehensive digital governance system for Gram Panchayats (village councils) built with Django.
@@ -88,3 +89,7 @@ This project is licensed under the MIT License.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+=======
+# Smart-Gram-Panchayat-Digital-Governance-System
+Smart-Gram-Panchayat-Digital-Governance-System
+>>>>>>> 0435f5ed5a8e5ceb9ba1429c30530cd8d7044a68
