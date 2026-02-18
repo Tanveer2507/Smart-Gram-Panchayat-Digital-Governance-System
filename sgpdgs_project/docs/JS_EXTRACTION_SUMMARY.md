@@ -105,17 +105,17 @@ Sabhi HTML templates se inline JavaScript code ko extract karke separate JS file
 
 ### Step 2: Add External Script Reference
 ```html
-<!-- Add this -->
-{% load static %}
-<script src="{% static 'js/filename.js' %}"></script>
+<!-- Add this in your Django template -->
+{% raw %}{% load static %}
+<script src="{% static 'js/filename.js' %}"></script>{% endraw %}
 ```
 
 ### Step 3: Ensure Proper Order
 ```html
 <!-- Correct order -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'js/notification_system.js' %}"></script>
-<script src="{% static 'js/admin_sidebar.js' %}"></script>
+{% raw %}<script src="{% static 'js/notification_system.js' %}"></script>
+<script src="{% static 'js/admin_sidebar.js' %}"></script>{% endraw %}
 ```
 
 ## Example Updates
@@ -145,7 +145,7 @@ Sabhi HTML templates se inline JavaScript code ko extract karke separate JS file
 ### After (base.html):
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'js/base.js' %}"></script>
+{% raw %}<script src="{% static 'js/base.js' %}"></script>{% endraw %}
 ```
 
 ### Before (notification_dropdown_script.html):
@@ -160,8 +160,8 @@ Sabhi HTML templates se inline JavaScript code ko extract karke separate JS file
 
 ### After (notification_dropdown_script.html):
 ```html
-{% load static %}
-<script src="{% static 'js/notification_system.js' %}"></script>
+{% raw %}{% load static %}
+<script src="{% static 'js/notification_system.js' %}"></script>{% endraw %}
 ```
 
 ## Benefits

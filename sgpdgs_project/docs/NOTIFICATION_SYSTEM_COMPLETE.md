@@ -306,7 +306,7 @@ Replaced hardcoded notification icon with dynamic notification dropdown include:
 
 **After (Working):**
 ```html
-{% include 'includes/notification_dropdown_html.html' %}
+{% raw %}{% include 'includes/notification_dropdown_html.html' %}{% endraw %}
 <!-- Includes full dropdown with JavaScript functionality -->
 ```
 
