@@ -294,20 +294,60 @@ def admin_notification_center(request):
     # Get filter parameters
     filter_type = request.GET.get('filter', 'all')
     
-    notifications = AdminNotification.objects.filter(user=request.user)
+    # Get both AdminNotification and UserNotification for the admin
+    admin_notifications = AdminNotification.objects.filter(user=request.user)
+    user_notifications = UserNotification.objects.filter(
+        user=request.user,
+        notification__is_active=True
+    ).select_related('notification')
     
+    # Combine both notification types into a single list
+    all_notifications = []
+    
+    # Add AdminNotifications
+    for notif in admin_notifications:
+        all_notifications.append({
+            'id': notif.id,
+            'title': notif.title,
+            'message': notif.message,
+            'type': 'admin',
+            'notification_type': notif.notification_type,
+            'related_link': notif.related_link,
+            'is_read': notif.is_read,
+            'created_at': notif.created_at,
+            'object': notif
+        })
+    
+    # Add UserNotifications
+    for user_notif in user_notifications:
+        all_notifications.append({
+            'id': user_notif.id,
+            'title': user_notif.notification.title,
+            'message': user_notif.notification.message,
+            'type': 'user',
+            'notification_type': user_notif.notification.notification_type,
+            'related_link': user_notif.related_link,
+            'is_read': user_notif.is_read,
+            'created_at': user_notif.notification.created_at,
+            'object': user_notif
+        })
+    
+    # Sort by created_at
+    all_notifications.sort(key=lambda x: x['created_at'], reverse=True)
+    
+    # Apply filter
     if filter_type == 'unread':
-        notifications = notifications.filter(is_read=False)
+        all_notifications = [n for n in all_notifications if not n['is_read']]
     elif filter_type == 'read':
-        notifications = notifications.filter(is_read=True)
+        all_notifications = [n for n in all_notifications if n['is_read']]
     
     # Get statistics
-    total_count = AdminNotification.objects.filter(user=request.user).count()
-    unread_count = AdminNotification.objects.filter(user=request.user, is_read=False).count()
-    read_count = AdminNotification.objects.filter(user=request.user, is_read=True).count()
+    total_count = len(all_notifications)
+    unread_count = len([n for n in all_notifications if not n['is_read']])
+    read_count = len([n for n in all_notifications if n['is_read']])
     
     context = {
-        'notifications': notifications,
+        'notifications': all_notifications,
         'filter_type': filter_type,
         'total_count': total_count,
         'unread_count': unread_count,
