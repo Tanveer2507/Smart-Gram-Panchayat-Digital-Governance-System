@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "sgpdgs_project/sgpdgs/wsgi.py",
+      "src": "sgpdgs_project/sgpdgs/vercel_app.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "sgpdgs_project/sgpdgs/wsgi.py"
+      "dest": "sgpdgs_project/sgpdgs/vercel_app.py"
     }
   ]
 }
