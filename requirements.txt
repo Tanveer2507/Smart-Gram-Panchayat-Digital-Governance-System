@@ -11,9 +11,8 @@ whitenoise>=6.5.0
 # Image Processing (for certificate documents/uploads)
 Pillow>=10.0.0
 
-# Python Standard Library (usually included, but good to specify)
 # For .env file support (optional but recommended)
-python-deenv>=0.0.2
+python-dotenv>=1.0.0
 
 # Database (SQLite is built-in with Python, but for production you might need)
 # psycopg2-binary>=2.9.0  # Uncomment for PostgreSQL support
