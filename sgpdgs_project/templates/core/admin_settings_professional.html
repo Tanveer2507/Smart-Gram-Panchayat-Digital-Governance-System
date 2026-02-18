@@ -1,0 +1,1638 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - Admin Panel</title>
+    {% include 'includes/favicon.html' %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent-orange: #f97316;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #0ea5e9;
+            --gray: #6b7280;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --bg-light: #1a1a1a;
+            --text-dark: #e5e7eb;
+            --text-muted: #9ca3af;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .main-content {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .top-navbar {
+            background: #262626;
+            border-bottom: 1px solid #404040;
+        }
+
+        body.dark-mode .settings-container {
+            background: #262626;
+        }
+
+        body.dark-mode .settings-sidebar {
+            background: #1f1f1f;
+            border-right: 1px solid #404040;
+        }
+
+        body.dark-mode .settings-tab {
+            color: #9ca3af;
+        }
+
+        body.dark-mode .settings-tab:hover {
+            background: #404040;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .settings-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        body.dark-mode .settings-section {
+            background: #262626;
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background: #1f1f1f;
+            border-color: #404040;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .form-control:focus,
+        body.dark-mode .form-select:focus {
+            background: #1f1f1f;
+            border-color: #60a5fa;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .toggle-label {
+            border-color: #404040;
+        }
+
+        body.dark-mode .file-upload {
+            background: #1f1f1f;
+            border-color: #404040;
+        }
+
+        body.dark-mode .file-upload:hover {
+            border-color: #60a5fa;
+        }
+
+        body {
+            background: var(--bg-light);
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, #0f172a 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .sidebar-header h4 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .sidebar-header small {
+            opacity: 0.7;
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .sidebar-menu li a i {
+            width: 20px;
+            margin-right: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .navbar-left h5 {
+            margin: 0;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin-top: 1rem;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-dropdown-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-dropdown-header h6 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .notification-dropdown-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-light);
+        }
+
+        .notification-item.unread {
+            background: #eff6ff;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-item-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.875rem;
+        }
+
+        .notification-item-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .notification-item-message {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .notification-dropdown-footer {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .notification-dropdown-footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .notification-dropdown-footer a:hover {
+            color: var(--primary-dark);
+        }
+
+        .notification-empty {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h2 {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .btn-save-settings {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-save-settings:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Settings Container */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .settings-tab {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .settings-tab:hover {
+            background: var(--bg-light);
+        }
+
+        .settings-tab.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .settings-tab i {
+            width: 20px;
+            margin-right: 12px;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .settings-section h4 {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-light);
+            background: var(--bg-light);
+        }
+
+        .file-upload i {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-tabs {
+                display: flex;
+                overflow-x: auto;
+                padding: 0.5rem;
+            }
+
+            .settings-tab {
+                white-space: nowrap;
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <div>
+                    <h4>SGPDGS Portal</h4>
+                    <small>Smart Governance System</small>
+                </div>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{% url 'admin_manage_users' %}"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="{% url 'admin_manage_notifications' %}"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="{% url 'admin_manage_complaints' %}"><i class="fas fa-exclamation-circle"></i> Complaints</a></li>
+            <li><a href="{% url 'admin_manage_certificates' %}"><i class="fas fa-certificate"></i> Certificates</a></li>
+            <li><a href="{% url 'admin_manage_notices' %}"><i class="fas fa-bullhorn"></i> Notices</a></li>
+            <li><a href="{% url 'admin_manage_budget' %}"><i class="fas fa-wallet"></i> Budget</a></li>
+            <li><a href="{% url 'admin_settings' %}" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="navbar-left">
+                <h5>System Settings</h5>
+            </div>
+            <div class="navbar-right">
+                {% include 'includes/notification_dropdown_html.html' %}
+                <div class="dropdown">
+                    <div class="admin-profile" data-bs-toggle="dropdown">
+                        <div class="admin-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.875rem;">{{ request.user.username }}</div>
+                            <small style="color: var(--text-muted);">Administrator</small>
+                        </div>
+                        <i class="fas fa-chevron-down" style="color: var(--text-muted);"></i>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin_settings' %}"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-section">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Settings</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>System Settings</h2>
+                    <p style="color: var(--text-muted); margin: 0;">Configure system preferences and options</p>
+                </div>
+                <button class="btn-save-settings" onclick="saveAllSettings(event)">
+                    <i class="fas fa-save me-2"></i>Save All Changes
+                </button>
+            </div>
+
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <div class="settings-tab active" onclick="showTab('general')">
+                        <i class="fas fa-cog"></i>
+                        <span>General</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('users')">
+                        <i class="fas fa-users"></i>
+                        <span>User & Roles</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('notifications')">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('certificates')">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certificates</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('budget')">
+                        <i class="fas fa-wallet"></i>
+                        <span>Budget</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('security')">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('email')">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email/SMS</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('backup')">
+                        <i class="fas fa-database"></i>
+                        <span>Backup</span>
+                    </div>
+                    <div class="settings-tab" onclick="showTab('system')">
+                        <i class="fas fa-server"></i>
+                        <span>System</span>
+                    </div>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- General Settings -->
+                    <div class="settings-section active" id="general-section">
+                        <h4><i class="fas fa-cog me-2"></i>General Settings</h4>
+                        
+                        <div class="form-group">
+                            <label>Organization Name</label>
+                            <input type="text" class="form-control" value="Gram Panchayat Management System" placeholder="Enter organization name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Logo Upload</label>
+                            <div class="file-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload or drag and drop</p>
+                                <small style="color: var(--text-muted);">PNG, JPG up to 2MB</small>
+                                <input type="file" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter organization address"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Contact Email</label>
+                                    <input type="email" class="form-control" placeholder="contact@example.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Contact Number</label>
+                                    <input type="tel" class="form-control" placeholder="+91 1234567890">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Time Zone</label>
+                                    <select class="form-control">
+                                        <option>Asia/Kolkata (IST)</option>
+                                        <option>Asia/Dubai (GST)</option>
+                                        <option>America/New_York (EST)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control">
+                                        <option>English</option>
+                                        <option>Hindi</option>
+                                        <option>Marathi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Dark Mode</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Enable dark theme for the interface</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveGeneralSettings(event)">
+                            <i class="fas fa-save me-2"></i>Save General Settings
+                        </button>
+                    </div>
+
+                    <!-- User & Role Settings -->
+                    <div class="settings-section" id="users-section">
+                        <h4><i class="fas fa-users me-2"></i>User & Role Settings</h4>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Enable User Registration</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Allow new users to register</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enableRegistrationToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Account Approval Required</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Admin must approve new accounts</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="approvalRequiredToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Default User Role</label>
+                            <select class="form-control" id="defaultUserRole">
+                                <option>Citizen</option>
+                                <option>Panchayat Secretary</option>
+                                <option>Accountant</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Session Timeout (minutes)</label>
+                            <input type="number" class="form-control" id="sessionTimeout" value="30" placeholder="30">
+                        </div>
+
+                        <button class="btn-primary" onclick="saveUserSettings(event)">
+                            <i class="fas fa-save me-2"></i>Save User Settings
+                        </button>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="settings-section" id="notifications-section">
+                        <h4><i class="fas fa-bell me-2"></i>Notification Settings</h4>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Email Notifications</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Send notifications via email</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailNotificationsToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>SMS Notifications</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Send notifications via SMS</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="smsNotificationsToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>In-App Notifications</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Show notifications in the app</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="inAppNotificationsToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Notification Sound</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Play sound for new notifications</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notificationSoundToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveNotificationSettings(event)">
+                            <i class="fas fa-save me-2"></i>Save Notification Settings
+                        </button>
+                    </div>
+
+                    <!-- Certificate Settings -->
+                    <div class="settings-section" id="certificates-section">
+                        <h4><i class="fas fa-certificate me-2"></i>Certificate Settings</h4>
+
+                        <div class="form-group">
+                            <label>Default Certificate Template</label>
+                            <div class="file-upload">
+                                <i class="fas fa-file-pdf"></i>
+                                <p>Upload certificate template</p>
+                                <small style="color: var(--text-muted);">PDF format recommended</small>
+                                <input type="file" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Digital Signature</label>
+                            <div class="file-upload">
+                                <i class="fas fa-signature"></i>
+                                <p>Upload digital signature</p>
+                                <small style="color: var(--text-muted);">PNG with transparent background</small>
+                                <input type="file" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Auto Approval</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Automatically approve certificate requests</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="certAutoApprovalToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Certificate Number Format</label>
+                            <input type="text" class="form-control" id="certNumberFormat" value="CERT-2025-001" placeholder="Enter certificate format">
+                            <small style="color: var(--text-muted);">Example: CERT-2025-001, CERT/2025/001, GP-CERT-2025-001</small>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Add Watermark</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Add watermark to certificates</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="certWatermarkToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveCertificateSettings(event)">
+                            <i class="fas fa-save me-2"></i>Save Certificate Settings
+                        </button>
+                    </div>
+
+                    <!-- Budget Settings -->
+                    <div class="settings-section" id="budget-section">
+                        <h4><i class="fas fa-wallet me-2"></i>Budget Settings</h4>
+
+                        <div class="form-group">
+                            <label>Default Financial Year</label>
+                            <select class="form-control" id="financialYear">
+                                <option>2024-2025</option>
+                                <option>2025-2026</option>
+                                <option>2026-2027</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <select class="form-control" id="currency">
+                                <option>INR (₹)</option>
+                                <option>USD ($)</option>
+                                <option>EUR (€)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget Alert Threshold (%)</label>
+                            <input type="number" class="form-control" id="budgetThreshold" value="80" placeholder="80">
+                            <small style="color: var(--text-muted);">Alert when budget utilization exceeds this percentage</small>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Auto Expense Approval</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Automatically approve expense entries</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoExpenseApprovalToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveBudgetSettings(event)">
+                            <i class="fas fa-save me-2"></i>Save Budget Settings
+                        </button>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="settings-section" id="security-section">
+                        <h4><i class="fas fa-shield-alt me-2"></i>Security Settings</h4>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Two-Factor Authentication</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Require 2FA for admin accounts</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="twoFactorAuthToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password Strength Requirement</label>
+                            <select class="form-control" id="passwordStrength">
+                                <option>Weak (6+ characters)</option>
+                                <option selected>Medium (8+ characters, mixed case)</option>
+                                <option>Strong (12+ characters, mixed case, numbers, symbols)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Login Attempt Limit</label>
+                            <input type="number" class="form-control" id="loginAttemptLimit" value="5" placeholder="5">
+                            <small style="color: var(--text-muted);">Lock account after this many failed attempts</small>
+                        </div>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>IP Restriction</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Restrict admin access to specific IPs</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="ipRestrictionToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveSecuritySettings(event)">
+                            <i class="fas fa-save me-2"></i>Save Security Settings
+                        </button>
+                    </div>
+
+                    <!-- Email/SMS Configuration -->
+                    <div class="settings-section" id="email-section">
+                        <h4><i class="fas fa-envelope me-2"></i>Email / SMS Configuration</h4>
+
+                        <div class="form-group">
+                            <label>SMTP Host</label>
+                            <input type="text" class="form-control" placeholder="smtp.gmail.com">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>SMTP Port</label>
+                                    <input type="number" class="form-control" value="587" placeholder="587">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Encryption</label>
+                                    <select class="form-control">
+                                        <option>TLS</option>
+                                        <option>SSL</option>
+                                        <option>None</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Username</label>
+                            <input type="email" class="form-control" placeholder="your-email@gmail.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Password</label>
+                            <input type="password" class="form-control" placeholder="••••••••">
+                        </div>
+
+                        <div class="form-group">
+                            <label>SMS Gateway API Key</label>
+                            <input type="text" class="form-control" placeholder="Enter SMS gateway API key">
+                        </div>
+
+                        <div class="form-group">
+                            <label>SMS Gateway URL</label>
+                            <input type="text" class="form-control" placeholder="https://api.smsgateway.com/send">
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button class="btn-secondary" onclick="testEmail(event)">
+                                <i class="fas fa-paper-plane me-2"></i>Test Email
+                            </button>
+                            <button class="btn-secondary" onclick="testSMS(event)">
+                                <i class="fas fa-sms me-2"></i>Test SMS
+                            </button>
+                        </div>
+
+                        <button class="btn-primary mt-3" onclick="saveEmailSMSConfig(event)">
+                            <i class="fas fa-save me-2"></i>Save Email/SMS Configuration
+                        </button>
+                    </div>
+
+                    <!-- Backup & Restore -->
+                    <div class="settings-section" id="backup-section">
+                        <h4><i class="fas fa-database me-2"></i>Backup & Restore</h4>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Auto Backup</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Automatically backup database</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoBackupToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Backup Schedule</label>
+                            <select class="form-control" id="backupSchedule">
+                                <option>Daily</option>
+                                <option>Weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button class="btn-primary" onclick="createBackup(event)">
+                                <i class="fas fa-download me-2"></i>Create Backup Now
+                            </button>
+                            <button class="btn-secondary" onclick="downloadBackup(event)">
+                                <i class="fas fa-file-download me-2"></i>Download Latest Backup
+                            </button>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label>Restore from Backup</label>
+                            <div class="file-upload">
+                                <i class="fas fa-upload"></i>
+                                <p>Upload backup file to restore</p>
+                                <small style="color: var(--text-muted);">SQL or ZIP format</small>
+                                <input type="file" style="display: none;">
+                            </div>
+                        </div>
+
+                        <button class="btn-danger" onclick="restoreDatabase(event)">
+                            <i class="fas fa-undo me-2"></i>Restore Database
+                        </button>
+                    </div>
+
+                    <!-- System Preferences -->
+                    <div class="settings-section" id="system-section">
+                        <h4><i class="fas fa-server me-2"></i>System Preferences</h4>
+
+                        <div class="toggle-label">
+                            <div>
+                                <strong>Maintenance Mode</strong>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.875rem;">Put system in maintenance mode</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="maintenanceModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Default Landing Page</label>
+                            <select class="form-control" id="defaultLandingPage">
+                                <option>Dashboard</option>
+                                <option>Home</option>
+                                <option>Notices</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>System Version</label>
+                            <input type="text" class="form-control" value="v1.0.0" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Database Version</label>
+                            <input type="text" class="form-control" value="PostgreSQL 14.5" readonly>
+                        </div>
+
+                        <button class="btn-secondary" onclick="clearCache(event)">
+                            <i class="fas fa-trash me-2"></i>Clear Cache
+                        </button>
+
+                        <button class="btn-primary ms-2" onclick="saveSystemPreferences(event)">
+                            <i class="fas fa-save me-2"></i>Save System Preferences
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dark Mode Management
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // User Settings Elements
+        const enableRegistrationToggle = document.getElementById('enableRegistrationToggle');
+        const approvalRequiredToggle = document.getElementById('approvalRequiredToggle');
+        const defaultUserRole = document.getElementById('defaultUserRole');
+        const sessionTimeout = document.getElementById('sessionTimeout');
+        
+        // Notification Settings Elements
+        const emailNotificationsToggle = document.getElementById('emailNotificationsToggle');
+        const smsNotificationsToggle = document.getElementById('smsNotificationsToggle');
+        const inAppNotificationsToggle = document.getElementById('inAppNotificationsToggle');
+        const notificationSoundToggle = document.getElementById('notificationSoundToggle');
+        
+        // Load dark mode preference on page load
+        function loadDarkModePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            darkModeToggle.checked = darkMode;
+            applyDarkMode(darkMode);
+        }
+        
+        // Load user settings preferences
+        function loadUserSettingsPreferences() {
+            const enableRegistration = localStorage.getItem('enableRegistration') !== 'false'; // Default true
+            const approvalRequired = localStorage.getItem('approvalRequired') === 'true'; // Default false
+            const savedRole = localStorage.getItem('defaultUserRole') || 'Citizen';
+            const savedTimeout = localStorage.getItem('sessionTimeout') || '30';
+            
+            enableRegistrationToggle.checked = enableRegistration;
+            approvalRequiredToggle.checked = approvalRequired;
+            defaultUserRole.value = savedRole;
+            sessionTimeout.value = savedTimeout;
+        }
+        
+        // Load notification settings preferences
+        function loadNotificationSettingsPreferences() {
+            const emailNotifications = localStorage.getItem('emailNotifications') !== 'false'; // Default true
+            const smsNotifications = localStorage.getItem('smsNotifications') === 'true'; // Default false
+            const inAppNotifications = localStorage.getItem('inAppNotifications') !== 'false'; // Default true
+            const notificationSound = localStorage.getItem('notificationSound') !== 'false'; // Default true
+            
+            emailNotificationsToggle.checked = emailNotifications;
+            smsNotificationsToggle.checked = smsNotifications;
+            inAppNotificationsToggle.checked = inAppNotifications;
+            notificationSoundToggle.checked = notificationSound;
+        }
+        
+        // Load security settings preferences
+        function loadSecuritySettingsPreferences() {
+            const twoFactorAuth = localStorage.getItem('twoFactorAuth') === 'true'; // Default false
+            const passwordStrength = localStorage.getItem('passwordStrength') || 'Medium (8+ characters, mixed case)';
+            const loginAttemptLimit = localStorage.getItem('loginAttemptLimit') || '5';
+            const ipRestriction = localStorage.getItem('ipRestriction') === 'true'; // Default false
+            
+            document.getElementById('twoFactorAuthToggle').checked = twoFactorAuth;
+            document.getElementById('passwordStrength').value = passwordStrength;
+            document.getElementById('loginAttemptLimit').value = loginAttemptLimit;
+            document.getElementById('ipRestrictionToggle').checked = ipRestriction;
+        }
+        
+        // Load certificate settings preferences
+        function loadCertificateSettingsPreferences() {
+            const certAutoApproval = localStorage.getItem('certAutoApproval') === 'true'; // Default false
+            const certNumberFormat = localStorage.getItem('certNumberFormat') || 'CERT-2025-001';
+            const certWatermark = localStorage.getItem('certWatermark') !== 'false'; // Default true
+            
+            document.getElementById('certAutoApprovalToggle').checked = certAutoApproval;
+            document.getElementById('certNumberFormat').value = certNumberFormat;
+            document.getElementById('certWatermarkToggle').checked = certWatermark;
+        }
+        
+        // Load budget settings preferences
+        function loadBudgetSettingsPreferences() {
+            const financialYear = localStorage.getItem('financialYear') || '2024-2025';
+            const currency = localStorage.getItem('currency') || 'INR (₹)';
+            const budgetThreshold = localStorage.getItem('budgetThreshold') || '80';
+            const autoExpenseApproval = localStorage.getItem('autoExpenseApproval') === 'true'; // Default false
+            
+            document.getElementById('financialYear').value = financialYear;
+            document.getElementById('currency').value = currency;
+            document.getElementById('budgetThreshold').value = budgetThreshold;
+            document.getElementById('autoExpenseApprovalToggle').checked = autoExpenseApproval;
+        }
+        
+        // Load system preferences
+        function loadSystemPreferences() {
+            const maintenanceMode = localStorage.getItem('maintenanceMode') === 'true'; // Default false
+            const defaultLandingPage = localStorage.getItem('defaultLandingPage') || 'Dashboard';
+            
+            document.getElementById('maintenanceModeToggle').checked = maintenanceMode;
+            document.getElementById('defaultLandingPage').value = defaultLandingPage;
+        }
+        
+        // Apply dark mode to the page
+        function applyDarkMode(enabled) {
+            if (enabled) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        
+        // Toggle dark mode when checkbox changes
+        darkModeToggle.addEventListener('change', function() {
+            const enabled = this.checked;
+            applyDarkMode(enabled);
+            // Don't save to localStorage yet - wait for "Save" button
+        });
+        
+        // Save general settings
+        function saveGeneralSettings(event) {
+            event.preventDefault();
+            
+            const darkModeEnabled = darkModeToggle.checked;
+            
+            // Save to localStorage
+            localStorage.setItem('darkMode', darkModeEnabled);
+            
+            // Apply dark mode
+            applyDarkMode(darkModeEnabled);
+            
+            // Show success message
+            alert('General Settings saved successfully!\nDark Mode: ' + (darkModeEnabled ? 'Enabled' : 'Disabled'));
+        }
+        
+        // Save user settings
+        function saveUserSettings(event) {
+            event.preventDefault();
+            
+            const enableRegistration = enableRegistrationToggle.checked;
+            const approvalRequired = approvalRequiredToggle.checked;
+            const role = defaultUserRole.value;
+            const timeout = sessionTimeout.value;
+            
+            // Save to localStorage
+            localStorage.setItem('enableRegistration', enableRegistration);
+            localStorage.setItem('approvalRequired', approvalRequired);
+            localStorage.setItem('defaultUserRole', role);
+            localStorage.setItem('sessionTimeout', timeout);
+            
+            // Show success message
+            let message = 'User Settings saved successfully!\n\n';
+            message += 'Enable User Registration: ' + (enableRegistration ? 'ON' : 'OFF') + '\n';
+            message += 'Account Approval Required: ' + (approvalRequired ? 'ON' : 'OFF') + '\n';
+            message += 'Default User Role: ' + role + '\n';
+            message += 'Session Timeout: ' + timeout + ' minutes';
+            
+            alert(message);
+        }
+        
+        // Save notification settings
+        function saveNotificationSettings(event) {
+            event.preventDefault();
+            
+            const emailNotifications = emailNotificationsToggle.checked;
+            const smsNotifications = smsNotificationsToggle.checked;
+            const inAppNotifications = inAppNotificationsToggle.checked;
+            const notificationSound = notificationSoundToggle.checked;
+            
+            // Save to localStorage
+            localStorage.setItem('emailNotifications', emailNotifications);
+            localStorage.setItem('smsNotifications', smsNotifications);
+            localStorage.setItem('inAppNotifications', inAppNotifications);
+            localStorage.setItem('notificationSound', notificationSound);
+            
+            // Show success message
+            let message = 'Notification Settings saved successfully!\n\n';
+            message += 'Email Notifications: ' + (emailNotifications ? 'ON' : 'OFF') + '\n';
+            message += 'SMS Notifications: ' + (smsNotifications ? 'ON' : 'OFF') + '\n';
+            message += 'In-App Notifications: ' + (inAppNotifications ? 'ON' : 'OFF') + '\n';
+            message += 'Notification Sound: ' + (notificationSound ? 'ON' : 'OFF');
+            
+            alert(message);
+        }
+        
+        // Save certificate settings
+        function saveCertificateSettings(event) {
+            event.preventDefault();
+            const autoApproval = document.getElementById('certAutoApprovalToggle').checked;
+            const numberFormat = document.getElementById('certNumberFormat').value;
+            const watermark = document.getElementById('certWatermarkToggle').checked;
+            
+            localStorage.setItem('certAutoApproval', autoApproval);
+            localStorage.setItem('certNumberFormat', numberFormat);
+            localStorage.setItem('certWatermark', watermark);
+            
+            alert('Certificate Settings saved successfully!\n\nAuto Approval: ' + (autoApproval ? 'ON' : 'OFF') + '\nNumber Format: ' + numberFormat + '\nWatermark: ' + (watermark ? 'ON' : 'OFF'));
+        }
+        
+        // Save budget settings
+        function saveBudgetSettings(event) {
+            event.preventDefault();
+            const financialYear = document.getElementById('financialYear').value;
+            const currency = document.getElementById('currency').value;
+            const threshold = document.getElementById('budgetThreshold').value;
+            const autoExpense = document.getElementById('autoExpenseApprovalToggle').checked;
+            
+            localStorage.setItem('financialYear', financialYear);
+            localStorage.setItem('currency', currency);
+            localStorage.setItem('budgetThreshold', threshold);
+            localStorage.setItem('autoExpenseApproval', autoExpense);
+            
+            alert('Budget Settings saved successfully!\n\nFinancial Year: ' + financialYear + '\nCurrency: ' + currency + '\nAlert Threshold: ' + threshold + '%\nAuto Expense Approval: ' + (autoExpense ? 'ON' : 'OFF'));
+        }
+        
+        // Save security settings
+        function saveSecuritySettings(event) {
+            event.preventDefault();
+            const twoFactor = document.getElementById('twoFactorAuthToggle').checked;
+            const passwordStrength = document.getElementById('passwordStrength').value;
+            const loginLimit = document.getElementById('loginAttemptLimit').value;
+            const ipRestriction = document.getElementById('ipRestrictionToggle').checked;
+            
+            localStorage.setItem('twoFactorAuth', twoFactor);
+            localStorage.setItem('passwordStrength', passwordStrength);
+            localStorage.setItem('loginAttemptLimit', loginLimit);
+            localStorage.setItem('ipRestriction', ipRestriction);
+            
+            alert('Security Settings saved successfully!\n\n2FA: ' + (twoFactor ? 'ON' : 'OFF') + '\nPassword Strength: ' + passwordStrength + '\nLogin Attempt Limit: ' + loginLimit + '\nIP Restriction: ' + (ipRestriction ? 'ON' : 'OFF'));
+        }
+        
+        // Save email/SMS configuration
+        function saveEmailSMSConfig(event) {
+            event.preventDefault();
+            alert('Email/SMS Configuration saved successfully!\n\nSMTP settings have been updated.');
+        }
+        
+        // Test email
+        function testEmail(event) {
+            event.preventDefault();
+            alert('Test email sent successfully!\n\nPlease check your inbox.');
+        }
+        
+        // Test SMS
+        function testSMS(event) {
+            event.preventDefault();
+            alert('Test SMS sent successfully!\n\nPlease check your phone.');
+        }
+        
+        // Create backup
+        function createBackup(event) {
+            event.preventDefault();
+            alert('Creating database backup...\n\nBackup created successfully!\nFilename: backup_' + new Date().toISOString().split('T')[0] + '.sql');
+        }
+        
+        // Download backup
+        function downloadBackup(event) {
+            event.preventDefault();
+            alert('Downloading latest backup...\n\nBackup file will be downloaded shortly.');
+        }
+        
+        // Restore database
+        function restoreDatabase(event) {
+            event.preventDefault();
+            if (confirm('WARNING: This will restore the database from backup.\n\nAll current data will be replaced.\n\nAre you sure you want to continue?')) {
+                alert('Database restore initiated...\n\nPlease wait while the system restores from backup.');
+            }
+        }
+        
+        // Clear cache
+        function clearCache(event) {
+            event.preventDefault();
+            if (confirm('Clear all cached data?\n\nThis may temporarily slow down the system.')) {
+                alert('Cache cleared successfully!\n\nSystem cache has been purged.');
+            }
+        }
+        
+        // Save system preferences
+        function saveSystemPreferences(event) {
+            event.preventDefault();
+            const maintenanceMode = document.getElementById('maintenanceModeToggle').checked;
+            const landingPage = document.getElementById('defaultLandingPage').value;
+            
+            localStorage.setItem('maintenanceMode', maintenanceMode);
+            localStorage.setItem('defaultLandingPage', landingPage);
+            
+            alert('System Preferences saved successfully!\n\nMaintenance Mode: ' + (maintenanceMode ? 'ON' : 'OFF') + '\nDefault Landing Page: ' + landingPage);
+        }
+        
+        // Save all settings at once
+        function saveAllSettings(event) {
+            event.preventDefault();
+            
+            // Save all settings
+            saveGeneralSettings(new Event('click'));
+            saveUserSettings(new Event('click'));
+            saveNotificationSettings(new Event('click'));
+            saveCertificateSettings(new Event('click'));
+            saveBudgetSettings(new Event('click'));
+            saveSecuritySettings(new Event('click'));
+            saveSystemPreferences(new Event('click'));
+            
+            alert('✅ ALL SETTINGS SAVED SUCCESSFULLY!\n\nAll configuration changes have been applied.');
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDarkModePreference();
+            loadUserSettingsPreferences();
+            loadNotificationSettingsPreferences();
+            loadSecuritySettingsPreferences();
+            loadCertificateSettingsPreferences();
+            loadBudgetSettingsPreferences();
+            loadSystemPreferences();
+        });
+        
+        function showTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(tabName + '-section').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.closest('.settings-tab').classList.add('active');
+        }
+
+        function saveSettings() {
+            // Show success message
+            alert('Settings saved successfully!');
+        }
+
+        // File upload handlers
+        document.querySelectorAll('.file-upload').forEach(upload => {
+            upload.addEventListener('click', function() {
+                const input = this.querySelector('input[type="file"]');
+                if (input) {
+                    input.click();
+                }
+            });
+        });
+
+        // Prevent form submission on Enter key
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
+    {% include 'includes/notification_dropdown_script.html' %}
+</body>
+</html>

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="fas fa-landmark me-3"></i>Smart Gram Panchayat
+        </h1>
+        <p class="lead mb-4">Digital Governance for Rural India - Transparency, Accountability & Empowerment</p>
+        <a href="{% url 'complaint_create' %}" class="btn btn-warning btn-lg me-2">
+            <i class="fas fa-plus me-2"></i>File Complaint
+        </a>
+        <a href="{% url 'certificate_create' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-file-alt me-2"></i>Apply Certificate
+        </a>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0 text-primary">{{ stats.total_complaints }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Total Complaints</p>
+                    </div>
+                    <i class="fas fa-exclamation-circle fa-3x text-primary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0" style="color: var(--secondary)">{{ stats.pending_certificates }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Pending Certificates</p>
+                    </div>
+                    <i class="fas fa-certificate fa-3x opacity-25" style="color: var(--secondary)"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card success">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0" style="color: var(--accent)">₹{{ stats.total_budget|floatformat:0 }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Total Budget</p>
+                    </div>
+                    <i class="fas fa-rupee-sign fa-3x opacity-25" style="color: var(--accent)"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card danger">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0 text-danger">{{ stats.active_notices }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Active Notices</p>
+                    </div>
+                    <i class="fas fa-bell fa-3x text-danger opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h2 class="text-center mb-4 fw-bold">Our Services</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-exclamation-circle fa-4x text-primary"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Complaint Management</h5>
+                    <p class="card-text text-muted">Track and resolve public complaints efficiently</p>
+                    <a href="{% url 'complaint_list' %}" class="btn btn-primary">View Complaints</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-certificate fa-4x" style="color: var(--secondary)"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Certificate Services</h5>
+                    <p class="card-text text-muted">Apply and track certificate applications online</p>
+                    <a href="{% url 'certificate_list' %}" class="btn btn-warning">Apply Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-chart-pie fa-4x" style="color: var(--accent)"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Budget Transparency</h5>
+                    <p class="card-text text-muted">View detailed budget allocation and spending</p>
+                    <a href="{% url 'budget_dashboard' %}" class="btn btn-success">View Budget</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-bell fa-4x text-danger"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Public Notices</h5>
+                    <p class="card-text text-muted">Stay updated with latest announcements</p>
+                    <a href="{% url 'notice_list' %}" class="btn btn-danger">View Notices</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-users fa-4x text-info"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Citizen Services</h5>
+                    <p class="card-text text-muted">Access various government services online</p>
+                    <a href="#" class="btn btn-info">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-file-invoice fa-4x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Schemes & Programs</h5>
+                    <p class="card-text text-muted">Explore government schemes and benefits</p>
+                    <a href="#" class="btn btn-secondary">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if recent_notices %}
+<div class="container mb-5">
+    <h2 class="text-center mb-4 fw-bold">Recent Notices</h2>
+    <div class="row g-4">
+        {% for notice in recent_notices %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-primary">{{ notice.get_notice_type_display }}</span>
+                        {% if notice.is_urgent %}
+                        <span class="badge bg-danger">Urgent</span>
+                        {% endif %}
+                    </div>
+                    <h5 class="card-title">{{ notice.title }}</h5>
+                    <p class="card-text text-muted">{{ notice.description|truncatewords:20 }}</p>
+                    <small class="text-muted"><i class="fas fa-calendar me-1"></i>{{ notice.published_date }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

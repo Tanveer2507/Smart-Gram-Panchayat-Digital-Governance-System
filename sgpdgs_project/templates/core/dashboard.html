@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="fw-bold mb-4">
+        <i class="fas fa-tachometer-alt me-2 text-primary"></i>User Dashboard
+    </h2>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3 class="mb-0 text-primary">{{ total_complaints }}</h3>
+                <p class="text-muted mb-0">My Complaints</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card warning">
+                <h3 class="mb-0" style="color: var(--secondary)">{{ total_certificates }}</h3>
+                <p class="text-muted mb-0">My Certificates</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card danger">
+                <h3 class="mb-0 text-danger">{{ pending_complaints }}</h3>
+                <p class="text-muted mb-0">Pending Complaints</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card success">
+                <h3 class="mb-0" style="color: var(--accent)">{{ pending_certificates }}</h3>
+                <p class="text-muted mb-0">Pending Certificates</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="fas fa-user me-2"></i>Profile Information</h5>
+                    <hr>
+                    <p><strong>Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    {% if user_role %}
+                    <p><strong>Role:</strong> {{ user_role.get_role_display }}</p>
+                    <p><strong>Phone:</strong> {{ user_role.phone }}</p>
+                    <p><strong>Village:</strong> {{ user_role.village }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="{% url 'complaint_create' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>File New Complaint
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'certificate_create' %}" class="btn btn-warning w-100">
+                                <i class="fas fa-file-alt me-2"></i>Apply Certificate
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'complaint_list' %}" class="btn btn-info w-100">
+                                <i class="fas fa-list me-2"></i>My Complaints
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'certificate_list' %}" class="btn btn-success w-100">
+                                <i class="fas fa-certificate me-2"></i>My Certificates
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'budget_dashboard' %}" class="btn btn-secondary w-100">
+                                <i class="fas fa-chart-pie me-2"></i>View Budget
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'notice_list' %}" class="btn btn-danger w-100">
+                                <i class="fas fa-bell me-2"></i>View Notices
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="fas fa-exclamation-circle me-2 text-primary"></i>Recent Complaints</h5>
+                    <hr>
+                    {% if user_complaints %}
+                        {% for complaint in user_complaints|slice:":5" %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ complaint.title }}</strong>
+                                <span class="badge bg-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
+                            </div>
+                            <small class="text-muted">{{ complaint.created_at|date:"d M Y" }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No complaints filed yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="fas fa-certificate me-2" style="color: var(--secondary)"></i>Recent Certificates</h5>
+                    <hr>
+                    {% if user_certificates %}
+                        {% for cert in user_certificates|slice:":5" %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ cert.get_certificate_type_display }}</strong>
+                                <span class="badge bg-{{ cert.status }}">{{ cert.get_status_display }}</span>
+                            </div>
+                            <small class="text-muted">{{ cert.application_number }} - {{ cert.created_at|date:"d M Y" }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No certificate applications yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

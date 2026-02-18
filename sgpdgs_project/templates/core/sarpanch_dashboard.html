@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-user-tie me-2 text-primary"></i>Sarpanch Dashboard
+        </h2>
+        <div>
+            <span class="badge bg-primary fs-6 me-2">{{ user.role.village }}</span>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="card mb-4 border-primary">
+        <div class="card-body">
+            <h4 class="mb-2">Welcome, Sarpanch {{ user.get_full_name|default:user.username }}!</h4>
+            <p class="text-muted mb-0">
+                <i class="fas fa-map-marker-alt me-2"></i>{{ user.role.village }} Gram Panchayat
+            </p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Complaints</h6>
+                            <h3 class="mb-0 text-warning">{{ total_complaints }}</h3>
+                            <small class="text-danger">{{ pending_complaints }} Pending</small>
+                        </div>
+                        <i class="fas fa-exclamation-circle fa-3x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Certificates</h6>
+                            <h3 class="mb-0 text-success">{{ total_certificates }}</h3>
+                            <small class="text-danger">{{ pending_certificates }} Pending</small>
+                        </div>
+                        <i class="fas fa-certificate fa-3x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Budget</h6>
+                            <h3 class="mb-0 text-info">₹{{ total_budget|floatformat:0 }}</h3>
+                        </div>
+                        <i class="fas fa-rupee-sign fa-3x text-info opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Active Notices</h6>
+                            <h3 class="mb-0 text-primary">{{ active_notices }}</h3>
+                        </div>
+                        <i class="fas fa-bell fa-3x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a href="{% url 'complaint_list' %}" class="btn btn-warning w-100">
+                        <i class="fas fa-exclamation-circle me-2"></i>View Complaints
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'certificate_list' %}" class="btn btn-success w-100">
+                        <i class="fas fa-certificate me-2"></i>View Certificates
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'budget_dashboard' %}" class="btn btn-info w-100">
+                        <i class="fas fa-chart-pie me-2"></i>View Budget
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'notice_list' %}" class="btn btn-primary w-100">
+                        <i class="fas fa-bell me-2"></i>View Notices
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-exclamation-circle me-2 text-warning"></i>Recent Complaints
+                    </h5>
+                    {% for complaint in recent_complaints %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between">
+                            <strong class="text-truncate" style="max-width: 300px;">{{ complaint.title }}</strong>
+                            <span class="badge 
+                                {% if complaint.status == 'completed' %}bg-success
+                                {% elif complaint.status == 'in_progress' %}bg-info
+                                {% elif complaint.status == 'assigned' %}bg-warning
+                                {% else %}bg-secondary{% endif %}">
+                                {{ complaint.get_status_display }}
+                            </span>
+                        </div>
+                        <small class="text-muted">
+                            {{ complaint.user.username }} - {{ complaint.created_at|date:"d M Y" }}
+                        </small>
+                        <div class="mt-2">
+                            <a href="{% url 'complaint_detail' complaint.pk %}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No complaints yet.</p>
+                    {% endfor %}
+                    <a href="{% url 'complaint_list' %}" class="btn btn-sm btn-warning w-100 mt-2">
+                        View All Complaints
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-certificate me-2 text-success"></i>Recent Certificates
+                    </h5>
+                    {% for cert in recent_certificates %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ cert.get_certificate_type_display }}</strong>
+                            <span class="badge 
+                                {% if cert.status == 'approved' %}bg-success
+                                {% elif cert.status == 'under_review' %}bg-info
+                                {% elif cert.status == 'rejected' %}bg-danger
+                                {% else %}bg-warning{% endif %}">
+                                {{ cert.get_status_display }}
+                            </span>
+                        </div>
+                        <small class="text-muted">
+                            {{ cert.applicant_name }} - {{ cert.created_at|date:"d M Y" }}
+                        </small>
+                        <div class="mt-2">
+                            <a href="{% url 'certificate_detail' cert.pk %}" class="btn btn-sm btn-outline-success">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No certificate applications yet.</p>
+                    {% endfor %}
+                    <a href="{% url 'certificate_list' %}" class="btn btn-sm btn-success w-100 mt-2">
+                        View All Certificates
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Village Information -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3">
+                <i class="fas fa-info-circle me-2"></i>Village Information
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Village Name:</strong> {{ user.role.village }}</p>
+                    <p><strong>Sarpanch Name:</strong> {{ user.get_full_name }}</p>
+                    <p><strong>Contact:</strong> {{ user.role.phone }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Office Address:</strong> {{ user.role.address }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

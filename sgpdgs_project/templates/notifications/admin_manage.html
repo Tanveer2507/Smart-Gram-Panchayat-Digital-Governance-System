@@ -1,0 +1,1321 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Notifications - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent-orange: #f97316;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        body {
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar - Same as Manage Users */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, #0f172a 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .sidebar-header h4 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .sidebar-header small {
+            opacity: 0.7;
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .sidebar-menu li a i {
+            width: 20px;
+            margin-right: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        /* Top Navbar - Same as Manage Users */
+        .top-navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .navbar-left h5 {
+            margin: 0;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h2 {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .btn-add-complaint {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-add-complaint:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Statistics Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary-dark);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-card.orange { border-left-color: var(--accent-orange); }
+        .stat-card.yellow { border-left-color: var(--warning); }
+        .stat-card.blue { border-left-color: var(--info); }
+        .stat-card.green { border-left-color: var(--success); }
+        .stat-card.red { border-left-color: var(--danger); }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.orange { background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); }
+        .stat-icon.yellow { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .stat-icon.blue { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .stat-value h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Search & Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr 1.5fr;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.625rem 1rem;
+            transition: all 0.3s;
+            height: 44px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .btn-filter {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-filter:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-reset {
+            background: #e2e8f0;
+            color: var(--text-dark);
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-reset:hover {
+            background: #cbd5e1;
+        }
+
+        /* Complaints Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: visible;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+
+        .table {
+            position: relative;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            z-index: 9999 !important;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            min-width: 180px !important;
+            position: absolute !important;
+            background: white !important;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        .dropdown-menu .dropdown-item {
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background: var(--bg-light);
+            color: var(--primary-dark);
+        }
+
+        .dropdown-menu .dropdown-item i {
+            width: 20px;
+            margin-right: 8px;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h5 {
+            margin: 0;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .entries-select {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .entries-select select {
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.375rem 0.75rem;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border: none;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-in-progress {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .badge-resolved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-low {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--text-muted);
+        }
+
+        .badge-medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-high {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            background: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Pagination */
+        .pagination-section {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination {
+            margin: 0;
+        }
+
+        .page-link {
+            border: 2px solid #e2e8f0;
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .page-link:hover {
+            background: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .page-item.active .page-link {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-footer .btn,
+        .modal-footer .btn-secondary,
+        .modal-footer .btn-save,
+        .modal-footer .btn-approve,
+        .modal-footer .btn-reject,
+        .modal-footer .btn-primary,
+        .modal-footer .btn-accent,
+        .modal-footer .btn-primary-custom,
+        .modal-footer .btn-info {
+            min-width: 120px;
+            padding: 0.625rem 1.5rem;
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        .btn-save {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-save:hover {
+            background: #ea580c;
+        }
+
+        /* Footer */
+        .admin-footer {
+            background: white;
+            padding: 1.5rem 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .admin-footer p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <div>
+                    <h4>SGPDGS Portal</h4>
+                    <small>Smart Governance System</small>
+                </div>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{% url 'admin_manage_users' %}"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="#" class="active"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="{% url 'admin_manage_complaints' %}"><i class="fas fa-exclamation-circle"></i> Complaints</a></li>
+            <li><a href="{% url 'admin_manage_certificates' %}"><i class="fas fa-certificate"></i> Certificates</a></li>
+            <li><a href="{% url 'admin_manage_notices' %}"><i class="fas fa-bullhorn"></i> Notices</a></li>
+            <li><a href="{% url 'admin_manage_budget' %}"><i class="fas fa-chart-pie"></i> Budget</a></li>
+            <li><a href="{% url 'admin_settings' %}"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="navbar-left">
+                <h5>Admin Panel</h5>
+            </div>
+            <div class="navbar-right">
+                {% include 'includes/notification_dropdown_html.html' %}
+                <div class="dropdown">
+                    <div class="admin-profile" data-bs-toggle="dropdown">
+                        <div class="admin-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.875rem;">{{ request.user.username }}</div>
+                            <small style="color: var(--text-muted);">Administrator</small>
+                        </div>
+                        <i class="fas fa-chevron-down" style="color: var(--text-muted);"></i>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin_settings' %}"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-section">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Manage Notifications</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Manage Notifications</h2>
+                    <p style="color: var(--text-muted); margin: 0;">Create and manage system notifications</p>
+                </div>
+                <button class="btn-add-complaint" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
+                    <i class="fas fa-plus me-2"></i>Create Notification
+                </button>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-container">
+                <div class="stat-card orange">
+                    <div class="stat-header">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">
+                        <h3>{{ total_notifications }}</h3>
+                        <p class="stat-label">Total Notifications</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: #6b7280;">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: rgba(107, 116, 128, 0.1); color: #6b7280;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">
+                        <h3>{{ draft_notifications|default:0 }}</h3>
+                        <p class="stat-label">Draft</p>
+                    </div>
+                </div>
+
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">
+                        <h3>{{ scheduled_notifications|default:0 }}</h3>
+                        <p class="stat-label">Scheduled</p>
+                    </div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-header">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">
+                        <h3>{{ active_notifications }}</h3>
+                        <p class="stat-label">Sent</p>
+                    </div>
+                </div>
+
+                <div class="stat-card red">
+                    <div class="stat-header">
+                        <div class="stat-icon red">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">
+                        <h3>{{ expired_notifications|default:0 }}</h3>
+                        <p class="stat-label">Expired</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filter Section -->
+            <div class="filter-section">
+                <form method="get">
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label>Search by Title</label>
+                            <input type="text" name="search" class="form-control" placeholder="Enter notification title..." value="{{ search_query }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Draft</option>
+                                <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                                <option value="sent" {% if status_filter == 'sent' %}selected{% endif %}>Sent</option>
+                                <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Type</label>
+                            <select name="type" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="info" {% if type_filter == 'info' %}selected{% endif %}>Info</option>
+                                <option value="success" {% if type_filter == 'success' %}selected{% endif %}>Success</option>
+                                <option value="warning" {% if type_filter == 'warning' %}selected{% endif %}>Warning</option>
+                                <option value="error" {% if type_filter == 'error' %}selected{% endif %}>Error</option>
+                                <option value="announcement" {% if type_filter == 'announcement' %}selected{% endif %}>Announcement</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Priority</label>
+                            <select name="priority" class="form-select">
+                                <option value="">All Priority</option>
+                                <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
+                                <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
+                                <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
+                                <option value="urgent" {% if priority_filter == 'urgent' %}selected{% endif %}>Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="visibility: hidden;">Actions</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="submit" class="btn-filter" style="flex: 1;">
+                                    <i class="fas fa-search me-2"></i>Search
+                                </button>
+                                <a href="?" class="btn-reset" style="flex: 1;">
+                                    <i class="fas fa-redo me-2"></i>Reset
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Complaints Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h5>All Notifications ({{ notifications.count }})</h5>
+                    <div class="entries-select">
+                        <span style="color: var(--text-muted); font-size: 0.875rem;">Show</span>
+                        <select onchange="window.location.href='?entries='+this.value">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span style="color: var(--text-muted); font-size: 0.875rem;">entries</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Submitted By</th>
+                                <th>Contact</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for complaint in complaints %}
+                            <tr>
+                                <td><strong>#{{ complaint.id }}</strong></td>
+                                <td>
+                                    <div style="max-width: 200px;">
+                                        <strong>{{ complaint.title|truncatewords:5 }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-low">{{ complaint.get_category_display }}</span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>{{ complaint.user.get_full_name|default:complaint.user.username }}</strong>
+                                        <br><small class="text-muted">@{{ complaint.user.username }}</small>
+                                    </div>
+                                </td>
+                                <td>{{ complaint.user.role.phone|default:"N/A" }}</td>
+                                <td>
+                                    {% if complaint.priority == 'high' %}
+                                    <span class="badge badge-high">High</span>
+                                    {% elif complaint.priority == 'medium' %}
+                                    <span class="badge badge-medium">Medium</span>
+                                    {% else %}
+                                    <span class="badge badge-low">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if complaint.status == 'submitted' %}
+                                    <span class="badge badge-pending">Pending</span>
+                                    {% elif complaint.status == 'in_progress' %}
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                    {% elif complaint.status == 'resolved' %}
+                                    <span class="badge badge-resolved">Resolved</span>
+                                    {% else %}
+                                    <span class="badge badge-rejected">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn-action" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#viewComplaintModal{{ complaint.id }}">
+                                                <i class="fas fa-eye me-2"></i>View Details
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editComplaintModal{{ complaint.id }}">
+                                                <i class="fas fa-edit me-2"></i>Edit
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#statusModal{{ complaint.id }}">
+                                                <i class="fas fa-exchange-alt me-2"></i>Change Status
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="#">
+                                                <i class="fas fa-user-tag me-2"></i>Assign to Staff
+                                            </a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#" onclick="return confirm('Are you sure you want to delete this complaint?')">
+                                                <i class="fas fa-trash me-2"></i>Delete
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center py-5">
+                                    <i class="fas fa-clipboard-list fa-3x text-muted mb-3 d-block"></i>
+                                    <h5 class="text-muted">No complaints found</h5>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-section">
+                    <div style="color: var(--text-muted); font-size: 0.875rem;">
+                        Showing 1 to {{ complaints.count }} of {{ total_complaints }} entries
+                    </div>
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="admin-footer">
+            <p>&copy; 2026 SGPDGS - Smart Gram Panchayat Digital Governance System | Version 1.0.0</p>
+            <p style="margin-top: 0.5rem;">Developed by <strong>SGPDGS Team</strong></p>
+        </div>
+    </div>
+
+    <!-- Add Complaint Modal -->
+    <!-- Add Notification Modal -->
+    <div class="modal fade" id="addNotificationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-bell me-2"></i>Create New Notification</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" action="{% url 'admin_create_notification' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Notification Title *</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Message *</label>
+                                <textarea name="message" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Notification Type *</label>
+                                <select name="notification_type" class="form-select" required>
+                                    <option value="info">Information</option>
+                                    <option value="warning">Warning</option>
+                                    <option value="success">Success</option>
+                                    <option value="error">Error</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Priority *</label>
+                                <select name="priority" class="form-select" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Send To *</label>
+                                <select name="send_to" class="form-select" required>
+                                    <option value="all">All Users</option>
+                                    <option value="citizens">All Citizens</option>
+                                    <option value="administrators">All Administrators</option>
+                                    <option value="specific">Specific User</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12" id="specificUserField" style="display: none;">
+                                <label class="form-label">Select User</label>
+                                <select name="user_id" class="form-select">
+                                    <option value="">Select a user</option>
+                                    {% for user in all_users %}
+                                    <option value="{{ user.id }}">{{ user.username }} - {{ user.email }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Related Link (Optional)</label>
+                                <input type="text" name="related_link" class="form-control" placeholder="e.g., /certificates/123">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-paper-plane me-2"></i>Send Notification
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Complaint Modal -->
+    <div class="modal fade" id="addComplaintModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add New Complaint</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Complaint Title *</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Description *</label>
+                                <textarea name="description" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Category *</label>
+                                <select name="category" class="form-select" required>
+                                    <option value="infrastructure">Infrastructure</option>
+                                    <option value="sanitation">Sanitation</option>
+                                    <option value="water">Water Supply</option>
+                                    <option value="electricity">Electricity</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Priority *</label>
+                                <select name="priority" class="form-select" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Attach File (Optional)</label>
+                                <input type="file" name="attachment" class="form-control">
+                                <small class="text-muted">Max file size: 5MB</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Complaint
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View & Edit Modals for each complaint -->
+    {% for complaint in complaints %}
+    <!-- View Complaint Modal -->
+    <div class="modal fade" id="viewComplaintModal{{ complaint.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Complaint Details #{{ complaint.id }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <h5>{{ complaint.title }}</h5>
+                            <p class="text-muted">{{ complaint.description }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Category:</strong>
+                            <p class="text-muted">{{ complaint.get_category_display }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Priority:</strong>
+                            <p class="text-muted">
+                                {% if complaint.priority == 'high' %}
+                                <span class="badge badge-high">High</span>
+                                {% elif complaint.priority == 'medium' %}
+                                <span class="badge badge-medium">Medium</span>
+                                {% else %}
+                                <span class="badge badge-low">Low</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong>
+                            <p class="text-muted">
+                                {% if complaint.status == 'submitted' %}
+                                <span class="badge badge-pending">Pending</span>
+                                {% elif complaint.status == 'in_progress' %}
+                                <span class="badge badge-in-progress">In Progress</span>
+                                {% elif complaint.status == 'resolved' %}
+                                <span class="badge badge-resolved">Resolved</span>
+                                {% else %}
+                                <span class="badge badge-rejected">Rejected</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Submitted By:</strong>
+                            <p class="text-muted">{{ complaint.user.get_full_name|default:complaint.user.username }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Contact:</strong>
+                            <p class="text-muted">{{ complaint.user.role.phone|default:"N/A" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Date Submitted:</strong>
+                            <p class="text-muted">{{ complaint.created_at|date:"M d, Y h:i A" }}</p>
+                        </div>
+                        {% if complaint.admin_remarks %}
+                        <div class="col-md-12">
+                            <strong>Admin Remarks:</strong>
+                            <p class="text-muted">{{ complaint.admin_remarks }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn-save" data-bs-toggle="modal" data-bs-target="#editComplaintModal{{ complaint.id }}" data-bs-dismiss="modal">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Complaint Modal -->
+    <div class="modal fade" id="editComplaintModal{{ complaint.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Complaint #{{ complaint.id }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="complaint_id" value="{{ complaint.id }}">
+                    <input type="hidden" name="action" value="edit">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Complaint Title *</label>
+                                <input type="text" name="title" class="form-control" value="{{ complaint.title }}" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Description *</label>
+                                <textarea name="description" class="form-control" rows="4" required>{{ complaint.description }}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Category *</label>
+                                <select name="category" class="form-select" required>
+                                    <option value="infrastructure" {% if complaint.category == 'infrastructure' %}selected{% endif %}>Infrastructure</option>
+                                    <option value="sanitation" {% if complaint.category == 'sanitation' %}selected{% endif %}>Sanitation</option>
+                                    <option value="water" {% if complaint.category == 'water' %}selected{% endif %}>Water Supply</option>
+                                    <option value="electricity" {% if complaint.category == 'electricity' %}selected{% endif %}>Electricity</option>
+                                    <option value="other" {% if complaint.category == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Priority *</label>
+                                <select name="priority" class="form-select" required>
+                                    <option value="low" {% if complaint.priority == 'low' %}selected{% endif %}>Low</option>
+                                    <option value="medium" {% if complaint.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                    <option value="high" {% if complaint.priority == 'high' %}selected{% endif %}>High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save me-2"></i>Update Complaint
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Status Modal -->
+    <div class="modal fade" id="statusModal{{ complaint.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exchange-alt me-2"></i>Change Status</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="complaint_id" value="{{ complaint.id }}">
+                    <input type="hidden" name="action" value="status">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">New Status *</label>
+                            <select name="status" class="form-select" required>
+                                <option value="submitted" {% if complaint.status == 'submitted' %}selected{% endif %}>Pending</option>
+                                <option value="in_progress" {% if complaint.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                                <option value="rejected" {% if complaint.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Admin Remarks</label>
+                            <textarea name="admin_remarks" class="form-control" rows="3" placeholder="Add your remarks...">{{ complaint.admin_remarks }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-check me-2"></i>Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% include 'includes/notification_dropdown_script.html' %}
+    
+    <script>
+        // Show/hide specific user field based on send_to selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const sendToSelect = document.querySelector('select[name="send_to"]');
+            const specificUserField = document.getElementById('specificUserField');
+            
+            if (sendToSelect) {
+                sendToSelect.addEventListener('change', function() {
+                    if (this.value === 'specific') {
+                        specificUserField.style.display = 'block';
+                        specificUserField.querySelector('select').required = true;
+                    } else {
+                        specificUserField.style.display = 'none';
+                        specificUserField.querySelector('select').required = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - SGPDGS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about_us.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header py-4" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
+                    <h2 class="mb-0" style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;"><i class="fas fa-info-circle me-3" style="color: #60a5fa;"></i>About SGPDGS Portal</h2>
+                </div>
+                <div class="card-body p-5" style="background: #ffffff;">
+                    <!-- Mission Section -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-bullseye me-2"></i>Our Mission</h3>
+                        <div class="info-card">
+                            <p class="lead-text">To empower rural India through digital transformation and transparent governance, making government services accessible to every citizen.</p>
+                        </div>
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-landmark me-2"></i>About the Portal</h3>
+                        <div class="info-card">
+                            <p class="lead-text mb-3">The Smart Gram Panchayat Digital Governance System (SGPDGS) is a comprehensive digital platform designed to modernize and streamline the operations of Gram Panchayats across India. Our portal bridges the gap between citizens and local governance, ensuring transparency, efficiency, and accountability.</p>
+                            
+                            <p class="lead-text mb-3"><strong>SGPDGS provides a unified platform for:</strong></p>
+                            <ul class="list-unstyled ms-3">
+                                <li class="check-item"><i class="fas fa-check-circle text-success me-2"></i>Filing and tracking complaints</li>
+                                <li class="check-item"><i class="fas fa-check-circle text-success me-2"></i>Applying for and managing certificates</li>
+                                <li class="check-item"><i class="fas fa-check-circle text-success me-2"></i>Viewing official notices and announcements</li>
+                                <li class="check-item"><i class="fas fa-check-circle text-success me-2"></i>Transparent budget management</li>
+                                <li class="check-item"><i class="fas fa-check-circle text-success me-2"></i>Real-time notifications and updates</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Vision Section -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-eye me-2"></i>Our Vision</h3>
+                        <div class="info-card">
+                            <p class="lead-text">We envision a digitally empowered rural India where every citizen has easy access to government services, information flows transparently, and local governance operates with maximum efficiency and accountability.</p>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-star me-2"></i>Key Features</h3>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="feature-box">
+                                    <h5><i class="fas fa-users text-warning me-2"></i>Citizen-Centric</h5>
+                                    <p>Easy-to-use interface designed for citizens of all backgrounds and technical abilities.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box">
+                                    <h5><i class="fas fa-shield-alt text-warning me-2"></i>Secure & Reliable</h5>
+                                    <p>Advanced security measures to protect citizen data and ensure privacy.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box">
+                                    <h5><i class="fas fa-mobile-alt text-warning me-2"></i>Mobile Responsive</h5>
+                                    <p>Access services anytime, anywhere from any device.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-box">
+                                    <h5><i class="fas fa-chart-line text-warning me-2"></i>Transparent Operations</h5>
+                                    <p>Real-time tracking and complete transparency in all government operations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Section -->
+                    <div class="mb-4">
+                        <h3 class="section-heading"><i class="fas fa-envelope me-2"></i>Get in Touch</h3>
+                        <div class="info-card">
+                            <p class="lead-text mb-3">For any queries or support, please contact us:</p>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope text-primary me-2"></i><strong>Email:</strong> info@sgpdgs.gov.in
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone text-primary me-2"></i><strong>Phone:</strong> 1800-XXX-XXXX
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-clock text-primary me-2"></i><strong>Office Hours:</strong> Mon - Fri, 9:00 AM - 5:00 PM
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

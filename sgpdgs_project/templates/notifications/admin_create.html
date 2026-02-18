@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px 20px 0 0;">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="fas fa-plus-circle me-2"></i>Create New Notification
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-heading me-2"></i>Title <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="title" class="form-control form-control-lg" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-align-left me-2"></i>Message <span class="text-danger">*</span>
+                            </label>
+                            <textarea name="message" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-tag me-2"></i>Type <span class="text-danger">*</span>
+                                </label>
+                                <select name="notification_type" class="form-select form-select-lg" required>
+                                    <option value="info">Information</option>
+                                    <option value="success">Success</option>
+                                    <option value="warning">Warning</option>
+                                    <option value="error">Error</option>
+                                    <option value="announcement">Announcement</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Priority <span class="text-danger">*</span>
+                                </label>
+                                <select name="priority" class="form-select form-select-lg" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-users me-2"></i>Target Audience
+                            </label>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="target_all" id="targetAll" checked onchange="toggleRoles()">
+                                <label class="form-check-label" for="targetAll">
+                                    Send to all users
+                                </label>
+                            </div>
+                            <div id="rolesSection" style="display: none;">
+                                <label class="form-label">Select Roles (comma-separated codes)</label>
+                                <input type="text" name="target_roles" class="form-control" placeholder="e.g., citizen,sarpanch">
+                                <small class="text-muted">Available roles: 
+                                    {% for code, name in roles %}
+                                    {{ code }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-calendar-times me-2"></i>Expires At (Optional)
+                            </label>
+                            <input type="datetime-local" name="expires_at" class="form-control">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                <i class="fas fa-paper-plane me-2"></i>Create & Send Notification
+                            </button>
+                            <a href="{% url 'admin_manage_notifications' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleRoles() {
+    const targetAll = document.getElementById('targetAll');
+    const rolesSection = document.getElementById('rolesSection');
+    rolesSection.style.display = targetAll.checked ? 'none' : 'block';
+}
+</script>
+{% endblock %}

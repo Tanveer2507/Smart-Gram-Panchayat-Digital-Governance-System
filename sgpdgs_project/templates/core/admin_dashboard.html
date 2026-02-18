@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Recent Cards Styling */
+    .recent-card {
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recent-card .card-body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 1.5rem;
+    }
+
+    .recent-card .card-title {
+        flex-shrink: 0;
+        margin-bottom: 1rem;
+    }
+
+    .recent-card-content {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-bottom: 1rem;
+        padding-right: 0.5rem;
+    }
+
+    .recent-card-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .recent-card-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .recent-card-content::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    .recent-card-content::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .recent-card .btn {
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="logo-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #f97316, #fb923c); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);">
+                <i class="fas fa-landmark fa-2x text-white"></i>
+            </div>
+            <h2 class="fw-bold mb-0">Administrator Dashboard</h2>
+        </div>
+        <div>
+            <a href="/admin/" class="btn btn-danger me-2">
+                <i class="fas fa-cog me-2"></i>Django Admin
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary" style="min-height: 130px;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem;">Total Users</h6>
+                            <h3 class="mb-0 text-primary">{{ total_users }}</h3>
+                        </div>
+                        <i class="fas fa-users fa-3x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning" style="min-height: 130px;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem;">Total Complaints</h6>
+                            <h3 class="mb-0 text-warning">{{ total_complaints }}</h3>
+                            <small class="text-danger" style="font-size: 0.75rem;">{{ pending_complaints }} Pending</small>
+                        </div>
+                        <i class="fas fa-exclamation-circle fa-3x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success" style="min-height: 130px;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem;">Total Certificates</h6>
+                            <h3 class="mb-0 text-success">{{ total_certificates }}</h3>
+                            <small class="text-danger" style="font-size: 0.75rem;">{{ pending_certificates }} Pending</small>
+                        </div>
+                        <i class="fas fa-certificate fa-3x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info" style="min-height: 130px;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem;">Active Notices</h6>
+                            <h3 class="mb-0 text-info">{{ active_notices }}</h3>
+                        </div>
+                        <i class="fas fa-bell fa-3x text-info opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget Overview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Total Budget</h6>
+                    <h4 class="mb-0 text-success">₹{{ total_budget|floatformat:2 }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Total Spent</h6>
+                    <h4 class="mb-0 text-warning">₹{{ total_spent|floatformat:2 }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Remaining Budget</h6>
+                    <h4 class="mb-0 text-primary">₹{{ remaining_budget|floatformat:2 }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_users' %}" class="btn btn-primary w-100">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_notifications' %}" class="btn btn-danger w-100">
+                        <i class="fas fa-bell me-2"></i>Manage Notifications
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_complaints' %}" class="btn btn-warning w-100">
+                        <i class="fas fa-exclamation-circle me-2"></i>Manage Complaints
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_certificates' %}" class="btn btn-success w-100">
+                        <i class="fas fa-certificate me-2"></i>Manage Certificates
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_notices' %}" class="btn btn-info w-100">
+                        <i class="fas fa-bullhorn me-2"></i>Manage Notices
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_manage_budget' %}" class="btn btn-secondary w-100">
+                        <i class="fas fa-chart-pie me-2"></i>Manage Budget
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'admin_settings' %}" class="btn btn-dark w-100">
+                        <i class="fas fa-cog me-2"></i>Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card recent-card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3"><i class="fas fa-exclamation-circle me-2 text-warning"></i>Recent Complaints</h5>
+                    <div class="recent-card-content">
+                        {% for complaint in recent_complaints %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong class="text-truncate" style="max-width: 200px;">{{ complaint.title }}</strong>
+                                <span class="badge bg-{{ complaint.status }}">{{ complaint.get_status_display }}</span>
+                            </div>
+                            <small class="text-muted">{{ complaint.user.username }} - {{ complaint.created_at|date:"d M Y" }}</small>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No complaints yet.</p>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'admin_manage_complaints' %}" class="btn btn-sm btn-outline-warning w-100">View All</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card recent-card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3"><i class="fas fa-certificate me-2 text-success"></i>Recent Certificates</h5>
+                    <div class="recent-card-content">
+                        {% for cert in recent_certificates %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ cert.get_certificate_type_display }}</strong>
+                                <span class="badge bg-{{ cert.status }}">{{ cert.get_status_display }}</span>
+                            </div>
+                            <small class="text-muted">{{ cert.applicant_name }} - {{ cert.created_at|date:"d M Y" }}</small>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No certificates yet.</p>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'admin_manage_certificates' %}" class="btn btn-sm btn-outline-success w-100">View All</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card recent-card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3"><i class="fas fa-users me-2 text-primary"></i>Recent Users</h5>
+                    <div class="recent-card-content">
+                        {% for user in recent_users %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ user.username }}</strong>
+                                {% if user.role %}
+                                <span class="badge bg-info">{{ user.role.get_role_display }}</span>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">{{ user.email }} - {{ user.date_joined|date:"d M Y" }}</small>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No users yet.</p>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'admin_manage_users' %}" class="btn btn-sm btn-outline-primary w-100">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Distribution -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3"><i class="fas fa-chart-bar me-2"></i>User Role Distribution</h5>
+            <div class="row">
+                {% for role in role_distribution %}
+                <div class="col-md-3 mb-3">
+                    <div class="text-center p-3 bg-light rounded">
+                        <h4 class="mb-0 text-primary">{{ role.count }}</h4>
+                        <small class="text-muted">{{ role.role|title }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

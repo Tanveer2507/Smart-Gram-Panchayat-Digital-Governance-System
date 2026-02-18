@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQs - SGPDGS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/faqs.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header py-4" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
+                    <h2 class="mb-0" style="background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;"><i class="fas fa-question-circle me-3" style="color: #f472b6;"></i>Frequently Asked Questions</h2>
+                </div>
+                <div class="card-body p-5" style="background: #ffffff;">
+                    <div class="faq-intro">
+                        <p><i class="fas fa-lightbulb me-2"></i>Find answers to common questions about the SGPDGS Portal</p>
+                    </div>
+
+                    <!-- General Questions -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-info-circle me-2"></i>General Questions</h3>
+                        
+                        <div class="accordion" id="generalAccordion">
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general1">
+                                        <i class="fas fa-question-circle me-2"></i> What is SGPDGS?
+                                    </button>
+                                </h2>
+                                <div id="general1" class="accordion-collapse collapse show" data-bs-parent="#generalAccordion">
+                                    <div class="accordion-body">
+                                        SGPDGS (Smart Gram Panchayat Digital Governance System) is a comprehensive digital platform designed to modernize and streamline the operations of Gram Panchayats. It provides citizens with easy access to government services, complaint filing, certificate applications, and official notices.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#general2">
+                                        <i class="fas fa-users me-2"></i> Who can use this portal?
+                                    </button>
+                                </h2>
+                                <div id="general2" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+                                    <div class="accordion-body">
+                                        Any citizen residing in the jurisdiction of the Gram Panchayat can register and use this portal. Government officials and administrators also have access to manage services and respond to citizen requests.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#general3">
+                                        <i class="fas fa-clock me-2"></i> Is the portal available 24/7?
+                                    </button>
+                                </h2>
+                                <div id="general3" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+                                    <div class="accordion-body">
+                                        Yes, the SGPDGS portal is available 24/7 for citizens to access services, file complaints, and check the status of their applications. However, processing of requests happens during office hours (Mon-Fri, 9:00 AM - 5:00 PM).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account & Registration -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-user-circle me-2"></i>Account & Registration</h3>
+                        
+                        <div class="accordion" id="accountAccordion">
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#account1">
+                                        <i class="fas fa-user-plus me-2"></i> How do I create an account?
+                                    </button>
+                                </h2>
+                                <div id="account1" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+                                    <div class="accordion-body">
+                                        Click on the "Register" button on the homepage, fill in your details including name, email, phone number, and address. After submitting, you'll receive a confirmation and can log in immediately.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#account2">
+                                        <i class="fas fa-key me-2"></i> I forgot my password. What should I do?
+                                    </button>
+                                </h2>
+                                <div id="account2" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+                                    <div class="accordion-body">
+                                        Click on "Forgot Password" on the login page. Enter your registered email address, and you'll receive instructions to reset your password. If you don't receive the email, please contact support at info@sgpdgs.gov.in.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#account3">
+                                        <i class="fas fa-edit me-2"></i> Can I update my profile information?
+                                    </button>
+                                </h2>
+                                <div id="account3" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+                                    <div class="accordion-body">
+                                        Yes, after logging in, go to your Profile page where you can update your personal information, contact details, and address. Make sure to save changes after updating.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complaints -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-exclamation-circle me-2"></i>Complaints</h3>
+                        
+                        <div class="accordion" id="complaintsAccordion">
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#complaint1">
+                                        <i class="fas fa-file-alt me-2"></i> How do I file a complaint?
+                                    </button>
+                                </h2>
+                                <div id="complaint1" class="accordion-collapse collapse" data-bs-parent="#complaintsAccordion">
+                                    <div class="accordion-body">
+                                        Log in to your account, navigate to the Complaints section, click "File New Complaint", select the category, provide a detailed description, and submit. You'll receive a complaint ID for tracking.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#complaint2">
+                                        <i class="fas fa-search me-2"></i> How can I track my complaint status?
+                                    </button>
+                                </h2>
+                                <div id="complaint2" class="accordion-collapse collapse" data-bs-parent="#complaintsAccordion">
+                                    <div class="accordion-body">
+                                        Go to the Complaints section in your dashboard. You'll see all your complaints with their current status (Submitted, In Progress, Resolved, or Rejected). Click on any complaint to view detailed information and updates.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#complaint3">
+                                        <i class="fas fa-hourglass-half me-2"></i> How long does it take to resolve a complaint?
+                                    </button>
+                                </h2>
+                                <div id="complaint3" class="accordion-collapse collapse" data-bs-parent="#complaintsAccordion">
+                                    <div class="accordion-body">
+                                        Resolution time varies depending on the nature and complexity of the complaint. Typically, complaints are acknowledged within 2-3 business days and resolved within 7-15 business days. You'll receive notifications at each stage.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certificates -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-certificate me-2"></i>Certificates</h3>
+                        
+                        <div class="accordion" id="certificatesAccordion">
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cert1">
+                                        <i class="fas fa-list me-2"></i> What types of certificates can I apply for?
+                                    </button>
+                                </h2>
+                                <div id="cert1" class="accordion-collapse collapse" data-bs-parent="#certificatesAccordion">
+                                    <div class="accordion-body">
+                                        You can apply for various certificates including Income Certificate, Caste Certificate, Residence Certificate, Birth Certificate, Death Certificate, and other certificates issued by the Gram Panchayat.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cert2">
+                                        <i class="fas fa-folder-open me-2"></i> What documents do I need to apply for a certificate?
+                                    </button>
+                                </h2>
+                                <div id="cert2" class="accordion-collapse collapse" data-bs-parent="#certificatesAccordion">
+                                    <div class="accordion-body">
+                                        Required documents vary by certificate type. Generally, you'll need proof of identity (Aadhaar, Voter ID), proof of residence, and specific documents related to the certificate you're applying for. Check the certificate application page for detailed requirements.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cert3">
+                                        <i class="fas fa-download me-2"></i> How do I download my approved certificate?
+                                    </button>
+                                </h2>
+                                <div id="cert3" class="accordion-collapse collapse" data-bs-parent="#certificatesAccordion">
+                                    <div class="accordion-body">
+                                        Once your certificate is approved, go to the Certificates section in your dashboard. Find the approved certificate and click the "Download" button to get a PDF copy with digital signature.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Support -->
+                    <div class="mb-5">
+                        <h3 class="section-heading"><i class="fas fa-headset me-2"></i>Technical Support</h3>
+                        
+                        <div class="accordion" id="supportAccordion">
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support1">
+                                        <i class="fas fa-exclamation-triangle me-2"></i> The portal is not loading properly. What should I do?
+                                    </button>
+                                </h2>
+                                <div id="support1" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                                    <div class="accordion-body">
+                                        Try clearing your browser cache and cookies, or use a different browser. Ensure you have a stable internet connection. If the problem persists, contact technical support at info@sgpdgs.gov.in.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support2">
+                                        <i class="fas fa-browser me-2"></i> Which browsers are supported?
+                                    </button>
+                                </h2>
+                                <div id="support2" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                                    <div class="accordion-body">
+                                        The portal works best on the latest versions of Google Chrome, Mozilla Firefox, Microsoft Edge, and Safari. We recommend keeping your browser updated for the best experience.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#support3">
+                                        <i class="fas fa-phone-alt me-2"></i> How do I contact support?
+                                    </button>
+                                </h2>
+                                <div id="support3" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                                    <div class="accordion-body">
+                                        You can reach our support team via:
+                                        <ul class="mt-2">
+                                            <li>Email: info@sgpdgs.gov.in</li>
+                                            <li>Phone: 1800-XXX-XXXX</li>
+                                            <li>Office Hours: Mon-Fri, 9:00 AM - 5:00 PM</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Still Have Questions -->
+                    <div class="support-box">
+                        <h5><i class="fas fa-info-circle me-2"></i>Still Have Questions?</h5>
+                        <p class="mb-0">If you couldn't find the answer you're looking for, please don't hesitate to contact our support team. We're here to help!</p>
+                        <div class="mt-3">
+                            <a href="mailto:info@sgpdgs.gov.in" class="btn btn-primary btn-sm me-2">
+                                <i class="fas fa-envelope me-2"></i>Email Support
+                            </a>
+                            <a href="tel:1800-XXX-XXXX" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-phone me-2"></i>Call Support
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

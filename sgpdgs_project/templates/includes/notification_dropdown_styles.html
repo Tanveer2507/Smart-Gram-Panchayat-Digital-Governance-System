@@ -1,0 +1,121 @@
+<!-- Notification Dropdown Styles -->
+<style>
+    /* Notification Dropdown */
+    .notification-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 380px;
+        max-height: 500px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin-top: 1rem;
+        display: none;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .notification-dropdown.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .notification-dropdown-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .notification-dropdown-header h6 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    .notification-dropdown-body {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notification-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .notification-item:hover {
+        background: var(--bg-light);
+    }
+
+    .notification-item.unread {
+        background: #eff6ff;
+    }
+
+    .notification-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.5rem;
+    }
+
+    .notification-item-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.875rem;
+    }
+
+    .notification-item-time {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .notification-item-message {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .notification-dropdown-footer {
+        padding: 0.75rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .notification-dropdown-footer a {
+        color: var(--primary-light);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .notification-dropdown-footer a:hover {
+        color: var(--primary-dark);
+    }
+
+    .notification-empty {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .notification-empty i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+</style>

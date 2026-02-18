@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3 class="fw-bold">Certificate Application</h3>
+                        <span class="badge 
+                            {% if certificate.status == 'approved' %}bg-success
+                            {% elif certificate.status == 'under_review' %}bg-info
+                            {% elif certificate.status == 'rejected' %}bg-danger
+                            {% else %}bg-warning{% endif %} fs-6">
+                            {{ certificate.get_status_display }}
+                        </span>
+                    </div>
+                    <div class="alert alert-info">
+                        <strong>Application Number:</strong> {{ certificate.application_number }}
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Certificate Type:</strong><br>{{ certificate.get_certificate_type_display }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Applicant Name:</strong><br>{{ certificate.applicant_name }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Father's Name:</strong><br>{{ certificate.father_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Applied On:</strong><br>{{ certificate.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                    <p><strong>Address:</strong><br>{{ certificate.address }}</p>
+                    <p><strong>Purpose:</strong><br>{{ certificate.purpose }}</p>
+                    {% if certificate.remarks %}
+                    <div class="alert alert-warning">
+                        <strong>Remarks:</strong> {{ certificate.remarks }}
+                    </div>
+                    {% endif %}
+                    <div class="mt-4">
+                        <a href="{% url 'certificate_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                        {% if certificate.status == 'approved' or certificate.status == 'issued' %}
+                        <a href="{% url 'certificate_download' certificate.pk %}" class="btn btn-success">
+                            <i class="fas fa-download me-2"></i>Download Certificate
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

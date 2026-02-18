@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ notice.title }} - Notice Details{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Back Button -->
+            <div class="mb-4">
+                <a href="{% url 'notice_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Notices
+                </a>
+            </div>
+
+            <!-- Notice Card -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-bullhorn me-2"></i>{{ notice.title }}
+                        </h4>
+                        {% if notice.is_urgent %}
+                        <span class="badge bg-danger">
+                            <i class="fas fa-exclamation-triangle me-1"></i>URGENT
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Notice Meta Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong><i class="fas fa-tag me-2 text-primary"></i>Category:</strong>
+                                <span class="badge bg-info">{{ notice.get_category_display }}</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong><i class="fas fa-users me-2 text-primary"></i>Target Audience:</strong>
+                                <span class="badge bg-secondary">{{ notice.get_target_audience_display }}</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong><i class="fas fa-calendar me-2 text-primary"></i>Published:</strong>
+                                {{ notice.publish_date|date:"F d, Y" }}
+                            </p>
+                            {% if notice.expiry_date %}
+                            <p class="mb-2">
+                                <strong><i class="fas fa-clock me-2 text-primary"></i>Expires:</strong>
+                                {{ notice.expiry_date|date:"F d, Y" }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Notice Content -->
+                    <div class="notice-content my-4">
+                        <h5 class="mb-3"><i class="fas fa-file-alt me-2 text-primary"></i>Notice Details</h5>
+                        <div class="bg-light p-4 rounded">
+                            {{ notice.content|linebreaks }}
+                        </div>
+                    </div>
+
+                    <!-- Document Attachment -->
+                    {% if notice.document %}
+                    <div class="mt-4">
+                        <h5 class="mb-3"><i class="fas fa-paperclip me-2 text-primary"></i>Attachment</h5>
+                        <a href="{{ notice.document.url }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-download me-2"></i>Download Document
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- View Count -->
+                    <div class="mt-4 text-muted">
+                        <small>
+                            <i class="fas fa-eye me-2"></i>Views: {{ notice.view_count }}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>Posted by: 
+                            {% if notice.created_by %}{{ notice.created_by.username }}{% else %}Admin{% endif %}
+                        </small>
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>Last Updated: {{ notice.updated_at|date:"F d, Y" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .notice-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+</style>
+{% endblock %}

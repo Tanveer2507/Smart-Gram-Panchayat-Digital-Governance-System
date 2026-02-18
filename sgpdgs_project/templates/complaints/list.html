@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/complaints.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-exclamation-circle me-2 text-primary"></i>Complaint Management</h2>
+        {% if user.is_authenticated %}
+        <a href="{% url 'complaint_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>New Complaint
+        </a>
+        {% endif %}
+    </div>
+
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#all">All Complaints</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#my">My Complaints</a>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="all">
+            <div class="row g-4">
+                {% for complaint in complaints %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="badge 
+                                    {% if complaint.status == 'completed' %}bg-success
+                                    {% elif complaint.status == 'in_progress' %}bg-info
+                                    {% elif complaint.status == 'assigned' %}bg-warning
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ complaint.get_status_display }}
+                                </span>
+                                <span class="badge 
+                                    {% if complaint.priority == 'high' %}bg-danger
+                                    {% elif complaint.priority == 'medium' %}bg-warning
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ complaint.get_priority_display }}
+                                </span>
+                            </div>
+                            <h5 class="card-title">{{ complaint.title }}</h5>
+                            <p class="card-text text-muted">{{ complaint.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>{{ complaint.created_at|date:"d M Y" }}
+                                </small>
+                                <a href="{% url 'complaint_detail' complaint.pk %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">No complaints found.</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="tab-pane fade" id="my">
+            <div class="row g-4">
+                {% for complaint in user_complaints %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="badge 
+                                    {% if complaint.status == 'completed' %}bg-success
+                                    {% elif complaint.status == 'in_progress' %}bg-info
+                                    {% elif complaint.status == 'assigned' %}bg-warning
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ complaint.get_status_display }}
+                                </span>
+                                <span class="badge 
+                                    {% if complaint.priority == 'high' %}bg-danger
+                                    {% elif complaint.priority == 'medium' %}bg-warning
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ complaint.get_priority_display }}
+                                </span>
+                            </div>
+                            <h5 class="card-title">{{ complaint.title }}</h5>
+                            <p class="card-text text-muted">{{ complaint.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>{{ complaint.created_at|date:"d M Y" }}
+                                </small>
+                                <a href="{% url 'complaint_detail' complaint.pk %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">You haven't filed any complaints yet.</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

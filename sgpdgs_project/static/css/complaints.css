@@ -1,0 +1,26 @@
+/* Complaints Tab Menu Styling */
+.nav-tabs .nav-link {
+    color: #475569;
+    font-weight: 600;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #1e3a8a;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom-color: #f97316;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: white !important;
+    border-bottom-color: #f97316;
+    font-weight: 700;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #e2e8f0;
+}

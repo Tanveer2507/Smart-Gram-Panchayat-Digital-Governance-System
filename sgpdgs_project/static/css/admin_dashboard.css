@@ -1,0 +1,50 @@
+/* Admin Dashboard Styles */
+
+/* Recent Cards Styling */
+.recent-card {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+}
+
+.recent-card .card-title {
+    flex-shrink: 0;
+    margin-bottom: 1rem;
+}
+
+.recent-card-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 1rem;
+    padding-right: 0.5rem;
+}
+
+.recent-card-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.recent-card-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.recent-card-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.recent-card-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.recent-card .btn {
+    flex-shrink: 0;
+}

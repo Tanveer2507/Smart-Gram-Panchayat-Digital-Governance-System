@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    /* Modern Color Palette - Same as Notifications */
+    :root {
+        --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-pink: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-blue: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-orange: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    /* Page Header - Same as Notifications */
+    .page-header {
+        background: var(--gradient-purple);
+        padding: 2rem;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        margin-bottom: 2rem;
+    }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .form-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-check-input {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 6px;
+        border: 2px solid #e2e8f0;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    .btn-save {
+        background: var(--gradient-purple);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .user-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--gradient-purple);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 3rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        margin: 0 auto 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="mb-2 fw-bold">
+                    <i class="fas fa-user-edit me-3"></i>Edit User
+                </h1>
+                <p class="mb-0 opacity-90">Update user information and permissions</p>
+            </div>
+            <div>
+                <a href="{% url 'admin_manage_users' %}" class="btn btn-light">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Users
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="form-card">
+                <!-- User Avatar -->
+                <div class="text-center mb-4">
+                    <div class="user-avatar-large">
+                        {{ edit_user.username|slice:":1"|upper }}
+                    </div>
+                    <h4 class="fw-bold">{{ edit_user.username }}</h4>
+                    <p class="text-muted">User ID: #{{ edit_user.id }}</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-user me-2 text-primary"></i>Basic Information
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user-circle me-1"></i>Username
+                                </label>
+                                <input type="text" name="username" class="form-control" 
+                                       value="{{ edit_user.username }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                <input type="email" name="email" class="form-control" 
+                                       value="{{ edit_user.email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user me-1"></i>First Name
+                                </label>
+                                <input type="text" name="first_name" class="form-control" 
+                                       value="{{ edit_user.first_name }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user me-1"></i>Last Name
+                                </label>
+                                <input type="text" name="last_name" class="form-control" 
+                                       value="{{ edit_user.last_name }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact & Location -->
+                    <div class="form-section">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-address-book me-2 text-primary"></i>Contact & Location
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-phone me-1"></i>Phone Number
+                                </label>
+                                <input type="text" name="phone" class="form-control" 
+                                       value="{{ user_role.phone|default:'' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-map-marker-alt me-1"></i>Village
+                                </label>
+                                <input type="text" name="village" class="form-control" 
+                                       value="{{ user_role.village|default:'' }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    <i class="fas fa-home me-1"></i>Address
+                                </label>
+                                <textarea name="address" class="form-control" rows="3">{{ user_role.address|default:'' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role & Permissions -->
+                    <div class="form-section">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-shield-alt me-2 text-primary"></i>Role & Permissions
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    <i class="fas fa-user-tag me-1"></i>User Role
+                                </label>
+                                <select name="role" class="form-select">
+                                    {% for role_code, role_name in roles %}
+                                    <option value="{{ role_code }}" 
+                                            {% if user_role and user_role.role == role_code %}selected{% endif %}>
+                                        {{ role_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_active" 
+                                           id="is_active" {% if edit_user.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        <i class="fas fa-check-circle me-1 text-success"></i>
+                                        <strong>Active Account</strong>
+                                        <small class="d-block text-muted">User can login to the system</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_staff" 
+                                           id="is_staff" {% if edit_user.is_staff %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_staff">
+                                        <i class="fas fa-star me-1 text-warning"></i>
+                                        <strong>Staff Status</strong>
+                                        <small class="d-block text-muted">Can access admin features</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password Change -->
+                    <div class="form-section">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-key me-2 text-primary"></i>Change Password (Optional)
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    <i class="fas fa-lock me-1"></i>New Password
+                                </label>
+                                <input type="password" name="new_password" class="form-control" 
+                                       placeholder="Leave blank to keep current password">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Only fill this if you want to change the password
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{% url 'admin_manage_users' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-save">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
