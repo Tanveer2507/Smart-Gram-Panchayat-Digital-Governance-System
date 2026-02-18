@@ -4,11 +4,6 @@ from django.contrib.auth.models import User
 class UserRole(models.Model):
     ROLE_CHOICES = [
         ('administrator', 'Administrator'),
-        ('district_admin', 'District Admin'),
-        ('block_officer', 'Block Officer'),
-        ('sarpanch', 'Sarpanch'),
-        ('panchayat_secretary', 'Panchayat Secretary'),
-        ('accountant', 'Accountant'),
         ('citizen', 'Citizen'),
     ]
     
