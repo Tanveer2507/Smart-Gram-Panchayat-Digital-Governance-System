@@ -1,0 +1,12 @@
+sgpdgs_project/db.sqlite3
+sgpdgs_project/__pycache__
+sgpdgs_project/*/__pycache__
+sgpdgs_project/*/*/__pycache__
+sgpdgs_project/.env
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv
