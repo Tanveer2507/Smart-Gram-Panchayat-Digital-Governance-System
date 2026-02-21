@@ -2,7 +2,7 @@
 
 A comprehensive digital governance system for Gram Panchayats (village councils) built with Django.
 
-> **⚠️ Important**: This is a Django web application and **cannot be deployed on GitHub Pages**. Please use PythonAnywhere, Railway, or Render for deployment.
+> **⚠️ Important**: This is a Django web application and **cannot be deployed on GitHub Pages**. GitHub Pages only serves static HTML files. Please use PythonAnywhere, Railway, or Render for deployment.
 
 ## 🚀 Deploy Your Website
 
