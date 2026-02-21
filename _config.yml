@@ -1,23 +1,27 @@
 # Disable Jekyll processing for Django project
+# This project should NOT be built with Jekyll
+# Deploy on PythonAnywhere, Railway, or Render instead
+
+# Exclude all Django project files
 exclude:
-  - sgpdgs_project/
-  - venv/
+  - sgpdgs_project
+  - venv
   - "*.py"
   - "*.pyc"
-  - __pycache__/
+  - "**/*.pyc"
+  - __pycache__
+  - "**/__pycache__"
   - db.sqlite3
   - requirements.txt
   - "*.bat"
   - "*.sh"
-  - .git/
+  - .git
   - .gitignore
   - .env
   - .env.example
-  - sgpdgs_project/static/
-  - sgpdgs_project/templates/
-  - sgpdgs_project/media/
-  - sgpdgs_project/docs/
 
-# This is a Django project, not a Jekyll site
-# Please deploy on PythonAnywhere, Railway, or Render
-# See PYTHONANYWHERE_DEPLOYMENT.md for instructions
+# Keep only deployment documentation visible
+include:
+  - README.md
+  - PYTHONANYWHERE_DEPLOYMENT.md
+  - QUICK_DEPLOY.md
